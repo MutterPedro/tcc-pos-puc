@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  auth:
+    container_name: auth-service
+    build:
+      context: ./auth-service
+    ports:
+      - 3001:3001
+    environment:
+      PORT: 3001
+  delivery:
+    container_name: delivery-service
+    build:
+      context: ./delivery-service
+    ports:
+      - 3002:3002
+    environment:
+      PORT: 3002
+  dashboard:
+    build:
+      context: ./dashboard
+    container_name: gsl-dashboard
+    ports:
+      - 3000:3000
+    environment:
+      AUTH_SERVICE_URL: http://auth:3001
+      DELIVERY_SERVICE_URL: http://deliviery:3002
+    volumes:
+      - ./dashboard/src:/app/src

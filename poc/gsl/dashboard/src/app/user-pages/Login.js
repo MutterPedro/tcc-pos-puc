@@ -1,8 +1,35 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
+import { login } from '../api/login';
 
 export class Login extends Component {
+  state = {
+    username: '',
+    password: '',
+    errorMessage: '',
+  };
+
+  _login(evt) {
+    evt.preventDefault();
+
+    const { username, password } = this.state;
+
+    login(username, password)
+      .then((res) => {
+        window.localStorage.setItem('session_token', res.session_token);
+        window.localStorage.setItem(
+          'permissions',
+          JSON.stringify(res.permissions),
+        );
+        window.location.href = '/';
+      })
+      .catch((err) => {
+        console.error(err);
+        this.setState({ errorMessage: err.message });
+      });
+  }
+
   render() {
     return (
       <div>
@@ -20,10 +47,14 @@ export class Login extends Component {
                 <Form className="pt-3">
                   <Form.Group className="d-flex search-field">
                     <Form.Control
-                      type="email"
+                      type="text"
                       placeholder="Username"
                       size="lg"
                       className="h-auto"
+                      value={this.state.username}
+                      onChange={(evt) =>
+                        this.setState({ username: evt.target.value })
+                      }
                     />
                   </Form.Group>
                   <Form.Group className="d-flex search-field">
@@ -32,15 +63,24 @@ export class Login extends Component {
                       placeholder="Password"
                       size="lg"
                       className="h-auto"
+                      value={this.state.password}
+                      onChange={(evt) =>
+                        this.setState({ password: evt.target.value })
+                      }
                     />
                   </Form.Group>
                   <div className="mt-3">
-                    <Link
+                    {this.state.errorMessage && (
+                      <p className="text-lg text-danger">
+                        {this.state.errorMessage}
+                      </p>
+                    )}
+                    <button
                       className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
-                      to="/dashboard"
+                      onClick={(evt) => this._login(evt)}
                     >
                       LOGIN
-                    </Link>
+                    </button>
                   </div>
                   <div className="my-2 d-flex justify-content-between align-items-center">
                     <div className="form-check">

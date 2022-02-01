@@ -2,14 +2,24 @@ import React, { Component } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Trans } from 'react-i18next';
+import { logOut } from '../utils/session';
 
 class Navbar extends Component {
   toggleOffcanvas() {
     document.querySelector('.sidebar-offcanvas').classList.toggle('active');
   }
+
   toggleRightSidebar() {
     document.querySelector('.right-sidebar').classList.toggle('open');
   }
+
+  logOut(evt) {
+    evt.preventDefault();
+
+    logOut();
+    window.location.href = '/';
+  }
+
   render() {
     return (
       <nav className="navbar p-0 fixed-top d-flex flex-row">
@@ -310,7 +320,7 @@ class Navbar extends Component {
                 <Dropdown.Divider />
                 <Dropdown.Item
                   href="!#"
-                  onClick={(evt) => evt.preventDefault()}
+                  onClick={(evt) => this.logOut(evt)}
                   className="preview-item"
                 >
                   <div className="preview-thumbnail">

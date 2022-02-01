@@ -1,0 +1,15 @@
+{
+  "Admin": {
+    "permissions": [
+      "management",
+      "deliveries_read",
+      "deliveries_write",
+      "data_science",
+      "client_service",
+      "registration"
+    ]
+  },
+  "Operador": {
+    "permissions": ["deliveries_read", "deliveries_write", "registration"]
+  }
+}

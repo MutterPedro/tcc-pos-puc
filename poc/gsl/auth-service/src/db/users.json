@@ -1,0 +1,14 @@
+{
+  "josnei123": {
+    "name": "Josnei Silveira",
+    "picture": "https://avatars2.githubusercontent.com/u/1709898?s=460&v=4",
+    "password": "123",
+    "roles": ["Admin"]
+  },
+  "tiburcio_segundo": {
+    "name": "Tiburcio Segundo",
+    "picture": "https://avatars2.githubusercontent.com/u/1709898?s=460&v=4",
+    "password": "010203",
+    "roles": ["Operador"]
+  }
+}

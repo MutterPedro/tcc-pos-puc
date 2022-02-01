@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import Spinner from '../shared/Spinner';
 import { Form } from 'react-bootstrap';
+import { isAllowedTo } from '../utils/session';
 
 const Statuses = {
   Pending: 'pending',
@@ -238,7 +239,7 @@ class Delivery extends Component {
               </div>
             </div>
           </div>
-          {editing && (
+          {editing && isAllowedTo('deliveries_write') && (
             <div className="col-12 grid-margin">
               <div className="card">
                 <div className="card-body">

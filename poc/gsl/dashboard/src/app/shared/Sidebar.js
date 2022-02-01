@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Collapse, Dropdown } from 'react-bootstrap';
 import { Trans } from 'react-i18next';
+import { isAllowedTo } from '../utils/session';
 
 function MenuItem({
   title,
@@ -198,56 +199,64 @@ class Sidebar extends Component {
               <Trans>Navigation</Trans>
             </span>
           </li>
-          <MenuItem
-            expanded={this.state.clientServices}
-            title={'Serviços ao Cliente'}
-            onClick={() => this.toggleMenuState('clientServices')}
-            path="/client-services"
-            isPathActive={(path) => this.isPathActive(path)}
-            icon="mdi-account-multiple"
-            subItems={[
-              { path: '/client-services/draw', title: 'Desenhar Fluxo' },
-              { path: '/client-services/analyze', title: 'Analisar Fluxo' },
-            ]}
-          />
-          <MenuItem
-            expanded={this.state.registrationInfo}
-            title={'Info Cadastrais'}
-            onClick={() => this.toggleMenuState('registrationInfo')}
-            isPathActive={(path) => this.isPathActive(path)}
-            icon="mdi-account-search"
-            path="/registration"
-            subItems={[
-              { path: '/registration/delivery', title: 'Entregas' },
-              { path: '/registration/client', title: 'Clientes' },
-              { path: '/registration/provider', title: 'Fornecedores' },
-              { path: '/registration/warehouse', title: 'Depósitos' },
-              { path: '/registration/product', title: 'Mercadorias' },
-            ]}
-          />
-          <MenuItem
-            expanded={this.state.management}
-            title={'Gestão e Estratégia'}
-            onClick={() => this.toggleMenuState('management')}
-            isPathActive={(path) => this.isPathActive(path)}
-            icon="mdi-tie"
-            path="/management"
-            subItems={[
-              { path: '/management/cockpit', title: 'Cockpit' },
-              { path: '/management/metrics', title: 'Métricas' },
-            ]}
-          />
-          <MenuItem
-            expanded={this.state.dataScience}
-            title={'Ciência de Dados'}
-            onClick={() => this.toggleMenuState('dataScience')}
-            isPathActive={(path) => this.isPathActive(path)}
-            icon="mdi-laptop"
-            path="/data-science"
-            subItems={[
-              { path: '/data-science/settings', title: 'Configurações' },
-            ]}
-          />
+          {isAllowedTo('client_service') && (
+            <MenuItem
+              expanded={this.state.clientServices}
+              title={'Serviços ao Cliente'}
+              onClick={() => this.toggleMenuState('clientServices')}
+              path="/client-services"
+              isPathActive={(path) => this.isPathActive(path)}
+              icon="mdi-account-multiple"
+              subItems={[
+                { path: '/client-services/draw', title: 'Desenhar Fluxo' },
+                { path: '/client-services/analyze', title: 'Analisar Fluxo' },
+              ]}
+            />
+          )}
+          {isAllowedTo('registration') && (
+            <MenuItem
+              expanded={this.state.registrationInfo}
+              title={'Info Cadastrais'}
+              onClick={() => this.toggleMenuState('registrationInfo')}
+              isPathActive={(path) => this.isPathActive(path)}
+              icon="mdi-account-search"
+              path="/registration"
+              subItems={[
+                { path: '/registration/delivery', title: 'Entregas' },
+                { path: '/registration/client', title: 'Clientes' },
+                { path: '/registration/provider', title: 'Fornecedores' },
+                { path: '/registration/warehouse', title: 'Depósitos' },
+                { path: '/registration/product', title: 'Mercadorias' },
+              ]}
+            />
+          )}
+          {isAllowedTo('management') && (
+            <MenuItem
+              expanded={this.state.management}
+              title={'Gestão e Estratégia'}
+              onClick={() => this.toggleMenuState('management')}
+              isPathActive={(path) => this.isPathActive(path)}
+              icon="mdi-tie"
+              path="/management"
+              subItems={[
+                { path: '/management/cockpit', title: 'Cockpit' },
+                { path: '/management/metrics', title: 'Métricas' },
+              ]}
+            />
+          )}
+          {isAllowedTo('data_science') && (
+            <MenuItem
+              expanded={this.state.dataScience}
+              title={'Ciência de Dados'}
+              onClick={() => this.toggleMenuState('dataScience')}
+              isPathActive={(path) => this.isPathActive(path)}
+              icon="mdi-laptop"
+              path="/data-science"
+              subItems={[
+                { path: '/data-science/settings', title: 'Configurações' },
+              ]}
+            />
+          )}
         </ul>
       </nav>
     );

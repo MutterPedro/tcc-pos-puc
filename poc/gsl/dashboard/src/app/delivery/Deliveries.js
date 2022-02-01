@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { isAllowedTo } from '../utils/session';
 
 const Statuses = {
   Pending: 'pending',
@@ -140,14 +141,16 @@ function DeliveryItem({ data }) {
       </td>
       <td>
         <div className="btn-group">
-          <button className="btn btn-sm btn-icon btn-outline-secondary btn-rounded">
-            <Link
-              to={`/registration/delivery/${data.id}?editing=true`}
-              className="nav-link text-secondary"
-            >
-              <i className="mdi mdi-pencil btn-icon"></i>
-            </Link>
-          </button>
+          {isAllowedTo('deliveries_write') && (
+            <button className="btn btn-sm btn-icon btn-outline-secondary btn-rounded">
+              <Link
+                to={`/registration/delivery/${data.id}?editing=true`}
+                className="nav-link text-secondary"
+              >
+                <i className="mdi mdi-pencil btn-icon"></i>
+              </Link>
+            </button>
+          )}
           <button className="btn btn-sm btn-icon btn-outline-danger btn-rounded">
             <i className="mdi mdi-delete btn-icon"></i>
           </button>
