@@ -9,6 +9,8 @@ services:
       - 3001:3001
     environment:
       PORT: 3001
+    volumes:
+      - "./auth-service/src:/app/src"
   delivery:
     container_name: delivery-service
     build:
@@ -17,6 +19,9 @@ services:
       - 3002:3002
     environment:
       PORT: 3002
+      AUTH_SERVICE_URL: http://auth:3001
+    volumes:
+      - "./delivery-service/src:/app/src"
   dashboard:
     build:
       context: ./dashboard

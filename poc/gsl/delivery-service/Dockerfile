@@ -6,4 +6,4 @@ RUN npm ci
 COPY ./src ./src
 EXPOSE 3002
 
-CMD [ "node", "./src" ]
+CMD [ "./node_modules/.bin/nodemon", "-w", "./src", "./src/index.js" ]

@@ -28,4 +28,16 @@ router.post('/login', (req, res) => {
   });
 });
 
+router.get('/roles', (req, res) => {
+  const { user_id } = req.query;
+  const user = Object.values(users).find((u) => u.id === Number(user_id));
+  const userRoles =
+    user?.roles.reduce(
+      (agg, role) => ({ ...agg, [role]: roles[role].permissions }),
+      {},
+    ) || [];
+
+  res.status(200).json({ roles: userRoles });
+});
+
 module.exports = router;

@@ -11,5 +11,8 @@
   },
   "Operador": {
     "permissions": ["deliveries_read", "deliveries_write", "registration"]
+  },
+  "Suporte": {
+    "permissions": ["deliveries_read", "registration", "client_service"]
   }
 }
