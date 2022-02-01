@@ -42,7 +42,7 @@ Para o triênio que começou este ano as metas gerais definidas são:
 
 - Automatizar todos os processos de entrega realizados por ela, visando aprimorar os processos de apuração, conferência e faturamento e manter um nível de remuneração adequado;
 - Implementar integrações de seus sistemas com os de suas parceiras, de modo a propiciar que as entregas possam ser realizadas em parceria, em uma ou mais etapas do processo. Essas integrações requerem que os sistemas atuais sejam adaptados e novos componentes sejam incorporados visando a uma maior abertura, que será baseada na **arquitetura orientada a serviços**;
-- Utilizar **geotecnologias** em todos os procesos que envolvam localização, de forma a facilitar a identificação e atualização de informações relativas às entregas agendadas e realizadas;
+  - Utilizar **geotecnologias** em todos os procesos que envolvam localização, de forma a facilitar a identificação e atualização de informações relativas às entregas agendadas e realizadas;
 - Tornar viável o uso de todas as tecnologias da informação e softwares necessários para atender às demandas dos clientes, fornecedores e parceiros, conforme definido neste documento.
 
 ## Descrição do trabalho
@@ -90,7 +90,7 @@ A solução GSL é um sistema constituído de **quatro módulos funcionais**, qu
 
 1. **Módulo de Informações Cadastrais**: trata-se de um módulo cujo escopo consiste em **obter e manter informações de clientes, fornecedores, depósitos e mercadorias**. Dentre essas destacam-se: identificação, dados de localização, dados complementares e informações necessárias ao negócio da empresa. Essas informações têm como fonte os próprios fornecedores e clientes, ficando os dados armazenados em Enterprise Information Systems (EIS), com destaque para os sistemas legados aqui apresentados;
 2. **Módulo de Serviços ao Cliente**: esta parte do sistema é baseada numa solução de workflow, com o uso de Business Process Management – BPM. Por meio deste módulo é possível **desenhar, analisar e acompanhar** todos os processos de atendimento ao cliente existentes na empresa - tanto os já existentes quanto os que ainda serão implantados, desta forma melhorando o desempenho e a eficiência desses processos;
-3. **Módulo de Gestão e Estratégia**: tem como escopo prover a gestão estratégica de todas as atividades da empresa, com indicadores das entregas realizadas e a realizar, na forma de indicadores, representados na forma de planilha e/ou cockpit. Para este módulo será utilizada uma ferramenta de gestã  o corporativa adquirida no mercado;
+3. **Módulo de Gestão e Estratégia**: tem como escopo prover a gestão estratégica de todas as atividades da empresa, com indicadores das entregas realizadas e a realizar, na forma de indicadores, representados na forma de planilha e/ou cockpit. Para este módulo será utilizada uma ferramenta de gestã o corporativa adquirida no mercado;
 4. **Módulo de Ciência de Dados - Data Warehouse (DW) e Business Intelligence (BI)**: este módulo do sistema deve utilizar ferramentas adequadas para obtenção, guarda, recuperação e utilização dos dados corporativos pertinentes, com recursos para tratamento de dados massivos (Big Data), mineração dos dados para apoio às tomadas de decisão. Todos os dados deste módulo são obtidos de planilhas e Sistemas Gerenciadores de Bancos de Dados (SGBDs), relacionais ou noSQL. O uso de recursos de um Data Warehouse (DW), nesse contexto, é essencial para o sucesso desta iniciativa;
 
 ## Restrições e Requisitos Arquiteturais

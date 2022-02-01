@@ -1,8 +1,8 @@
 ## O que fazer?
 
 1. ~~Reentender a arquitetura proposta anteriormente~~
-2. Encontrar um template de dashboard simples e responsivo
-3. Definir quais serão as features a serem implementadas na PoC
+2. ~~Encontrar um template de dashboard simples e responsivo~~
+3. ~~Definir quais serão as features a serem implementadas na PoC~~
 4. Pensar nas US
 5. Pensar nos diagramas de classe, implantação e componentes
 6. Pensar nos atributos de qualidade
@@ -25,6 +25,7 @@
     - atraso
     - status
     - previsão de entrega
+    - usar geocode
   - Atualizar entrega
     - só uma role especifica
 - Usar tecnologias familiares dos colaboradores
