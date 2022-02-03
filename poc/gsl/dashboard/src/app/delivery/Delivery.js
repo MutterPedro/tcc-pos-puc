@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import Spinner from '../shared/Spinner';
 import { Form } from 'react-bootstrap';
 import { isAllowedTo } from '../utils/session';
+import { getDelivery, updateDelivery } from '../api/delivery';
 
 const Statuses = {
   Pending: 'pending',
@@ -13,9 +14,38 @@ const Statuses = {
   Late: 'late',
 };
 
-function NewUpdateForm() {
+function NewUpdateForm({ delivery, onDeliveryUpdate }) {
+  async function onSubmit(evt) {
+    evt.preventDefault();
+
+    const payload = {
+      id: delivery.id,
+      data: {
+        status: evt.target.elements['new-status'].value.toLowerCase(),
+        path: {
+          from: {
+            alias: delivery.paths[delivery.paths.length - 1].to.alias,
+            lat: 2.07263,
+            lng: -126.584544,
+          },
+          to: {
+            alias: evt.target.elements['new-place'].value,
+            lat: -14.848192,
+            lng: 43.042185,
+          },
+          responsible: {
+            name: evt.target.elements['new-responsible'].value,
+          },
+        },
+      },
+    };
+
+    const response = await updateDelivery(payload.id, payload.data);
+    onDeliveryUpdate(response);
+  }
+
   return (
-    <form className="forms-sample">
+    <form className="forms-sample" onSubmit={onSubmit}>
       <Form.Group>
         <label htmlFor="new-place" className="col-sm-3 col-form-label">
           Novo Local
@@ -45,7 +75,7 @@ function NewUpdateForm() {
         </label>
         <select className="form-control text-light" id="new-status">
           {Object.keys(Statuses).map((status) => (
-            <option>{Statuses[status].toUpperCase()}</option>
+            <option key={status}>{Statuses[status].toUpperCase()}</option>
           ))}
         </select>
       </Form.Group>
@@ -63,61 +93,11 @@ class Delivery extends Component {
     loading: true,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const delivery = await getDelivery(this.props.match.params.id);
+
     this.setState({
-      data: {
-        id: this.props.match.params.id,
-        order: {
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          id: 123,
-          user: { name: 'João da Silva' },
-          itens: [
-            {
-              name: 'Abajur de Algodão',
-              price: 500,
-            },
-            {
-              name: 'Sandalia Preta',
-              price: 500,
-            },
-          ],
-          total: 1000,
-        },
-        status: 'pending',
-        paths: [
-          {
-            from: {
-              alias: 'Deposito SP',
-              lat: -23.56488,
-              lng: -46.63818,
-            },
-            to: {
-              alias: 'Deposito MG',
-              lat: -23.56488,
-              lng: -46.63818,
-            },
-            arrivedAt: new Date(),
-            leftAt: new Date(),
-            responsible: { name: 'Tiborcio Segundo' },
-          },
-          {
-            from: {
-              alias: 'Deposito MG',
-              lat: -23.56488,
-              lng: -46.63818,
-            },
-            to: {
-              alias: 'Casa do João da Silva',
-              lat: -23.56488,
-              lng: -46.63818,
-            },
-            arrivedAt: new Date(),
-            leftAt: new Date(),
-            responsible: { name: 'Tiborcio Terceirio' },
-          },
-        ],
-      },
+      data: delivery,
       editing: this.props.location.search.includes('editing=true'),
       loading: false,
     });
@@ -140,6 +120,12 @@ class Delivery extends Component {
       default:
         return 'badge badge-secondary';
     }
+  }
+
+  getTotal(delivery) {
+    return (
+      delivery.order.items.reduce((total, item) => total + item.price, 0) / 100
+    ).toFixed(2);
   }
 
   render() {
@@ -167,20 +153,18 @@ class Delivery extends Component {
                 </div>
                 <div className="text-md-center text-xl-left mb-lg-3">
                   <h6 className="mb-1">Total</h6>
-                  <p className="text-muted mb-0">
-                    R$ {(data.order.total / 100).toFixed(2)}
-                  </p>
+                  <p className="text-muted mb-0">R$ {this.getTotal(data)}</p>
                 </div>
                 <div className="text-md-center text-xl-left mb-lg-3">
                   <h6 className="mb-1">Data do Pedido</h6>
                   <p className="text-muted mb-0">
-                    {data.order.createdAt.toLocaleDateString()}
+                    {new Date(data.order.createdAt).toLocaleDateString()}
                   </p>
                 </div>
                 <div className="text-md-center text-xl-left mb-lg-3">
                   <h6 className="mb-1">Última Atualização</h6>
                   <p className="text-muted mb-0">
-                    {data.order.updatedAt.toLocaleDateString()}
+                    {new Date(data.order.updatedAt).toLocaleDateString()}
                   </p>
                 </div>
                 <div className="text-md-center text-xl-left mb-lg-3">
@@ -190,7 +174,7 @@ class Delivery extends Component {
                   </div>
                 </div>
                 <h4>Itens</h4>
-                {data.order.itens.map((item, index) => (
+                {data.order.items.map((item, index) => (
                   <div
                     key={index}
                     className="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3"
@@ -225,11 +209,15 @@ class Delivery extends Component {
                         {path.from.alias} -&gt; {path.to.alias}
                       </h6>
                       <p className="text-muted mb-0">
-                        {'Saida as ' + path.leftAt.toLocaleDateString()}
+                        {'Saida as ' +
+                          new Date(path.leftAt).toLocaleDateString()}
                       </p>
-                      <p className="text-muted mb-0">
-                        {'Chegada as ' + path.arrivedAt.toLocaleDateString()}
-                      </p>
+                      {path.arrivedAt && (
+                        <p className="text-muted mb-0">
+                          {'Chegada as ' +
+                            new Date(path.arrivedAt).toLocaleDateString()}
+                        </p>
+                      )}
                       <p className="text-muted mb-0">
                         {'Responsável: ' + path.responsible.name}
                       </p>
@@ -247,7 +235,10 @@ class Delivery extends Component {
                   <p className="card-description">
                     Entrando uma nova atualização a entrega
                   </p>
-                  <NewUpdateForm />
+                  <NewUpdateForm
+                    delivery={data}
+                    onDeliveryUpdate={(data) => this.setState({ data })}
+                  />
                 </div>
               </div>
             </div>

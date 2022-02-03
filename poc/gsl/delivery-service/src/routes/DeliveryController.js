@@ -41,7 +41,7 @@ class ListDeliveriesController extends Controller {
   }
 
   async handle(req, res) {
-    const { limit = 10, offset = 0 } = req.body;
+    const { limit = 10, offset = 0 } = req.query;
 
     const result = await this.deliveryService.getDeliveries(limit, offset);
 
@@ -49,14 +49,39 @@ class ListDeliveriesController extends Controller {
   }
 }
 
+class GetDeliveryController extends Controller {
+  constructor() {
+    super('get', '/delivery/:id');
+
+    const sessionValidator = new SessionValidator();
+    const permissionValidator = new PermissionValidator(['deliveries_read']);
+
+    this.middlewares = [
+      sessionValidator.validate.bind(sessionValidator),
+      permissionValidator.validate.bind(permissionValidator),
+    ];
+    this.deliveryService = new DeliveryService();
+  }
+
+  async handle(req, res) {
+    const { id } = req.params;
+
+    const result = await this.deliveryService.getDelivery(id);
+
+    res.status(200).json(result);
+  }
+}
+
 const router = Router();
-[new UpdateDeliveryController(), new ListDeliveriesController()].forEach(
-  (controller) => {
-    router[controller.verb](
-      controller.path,
-      ...controller.middlewares,
-      controller.handle.bind(controller),
-    );
-  },
-);
+[
+  new UpdateDeliveryController(),
+  new ListDeliveriesController(),
+  new GetDeliveryController(),
+].forEach((controller) => {
+  router[controller.verb](
+    controller.path,
+    ...controller.middlewares,
+    controller.handle.bind(controller),
+  );
+});
 module.exports = router;

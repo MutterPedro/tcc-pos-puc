@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { getDeliveries } from '../api/delivery';
+import Spinner from '../shared/Spinner';
 import { isAllowedTo } from '../utils/session';
 
 const Statuses = {
@@ -10,87 +12,6 @@ const Statuses = {
   Cancelled: 'cancelled',
   Late: 'late',
 };
-
-const deliveries = [
-  {
-    id: 123,
-    order: {
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      id: 123,
-      user: { name: 'João da Silva' },
-      item: {},
-      total: 1000,
-    },
-    status: Statuses.Pending,
-    paths: [{}],
-  },
-  {
-    id: 456,
-    order: {
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      id: 124,
-      user: { name: 'Maria da Silva' },
-      item: {},
-      total: 1010,
-    },
-    status: Statuses.Invoiced,
-    paths: [{}],
-  },
-  {
-    id: 789,
-    order: {
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      id: 125,
-      user: { name: 'Pedro da Silva' },
-      item: {},
-      total: 2000,
-    },
-    status: Statuses.InProgress,
-    paths: [{}],
-  },
-  {
-    id: 111,
-    order: {
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      id: 234,
-      user: { name: 'Carlos Alberto de Nobrega' },
-      item: {},
-      total: 4500,
-    },
-    status: Statuses.Completed,
-    paths: [{}],
-  },
-  {
-    id: 121,
-    order: {
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      id: 2343,
-      user: { name: 'Robert Plant JR' },
-      item: {},
-      total: 14400,
-    },
-    status: Statuses.Cancelled,
-    paths: [{}],
-  },
-  {
-    id: 122,
-    order: {
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      id: 1223,
-      user: { name: 'John Paul Jones JR' },
-      item: {},
-      total: 154600,
-    },
-    status: Statuses.Late,
-    paths: [{}],
-  },
-];
 
 function DeliveryItem({ data }) {
   function getClassNameByStatus(status) {
@@ -112,6 +33,12 @@ function DeliveryItem({ data }) {
     }
   }
 
+  function getTotal() {
+    return (
+      data.order.items.reduce((total, item) => total + item.price, 0) / 100
+    ).toFixed(2);
+  }
+
   return (
     <tr>
       <td>
@@ -128,12 +55,12 @@ function DeliveryItem({ data }) {
           to={`/registration/delivery/${data.id}`}
           className="nav-link text-secondary"
         >
-          {data.order.id}
+          {data.id}
         </Link>
       </td>
-      <td> R${(data.order.total / 100).toFixed(2)} </td>
-      <td> {data.order.createdAt.toLocaleDateString()} </td>
-      <td> {data.order.updatedAt.toLocaleDateString()} </td>
+      <td> R$ {getTotal(data)} </td>
+      <td> {new Date(data.order.createdAt).toLocaleDateString()} </td>
+      <td> {new Date(data.order.updatedAt).toLocaleDateString()} </td>
       <td>
         <div className={getClassNameByStatus(data.status)}>
           {data.status.toUpperCase()}
@@ -161,6 +88,17 @@ function DeliveryItem({ data }) {
 }
 
 export default class Deliveries extends Component {
+  state = {
+    loading: true,
+    deliveries: [],
+  };
+
+  async componentDidMount() {
+    const { data: deliveries } = await getDeliveries();
+
+    this.setState({ deliveries, loading: false });
+  }
+
   render() {
     return (
       <div className="row ">
@@ -168,26 +106,30 @@ export default class Deliveries extends Component {
           <div className="card">
             <div className="card-body">
               <h4 className="card-title">Status das Entregas</h4>
-              <div className="table-responsive">
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th> Cliente </th>
-                      <th> # Pedido </th>
-                      <th> Total </th>
-                      <th> Data do Pedido </th>
-                      <th> Última Atualização </th>
-                      <th> Status </th>
-                      <th> Ações </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {deliveries.map((delivery) => (
-                      <DeliveryItem data={delivery} />
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              {this.state.loading ? (
+                <Spinner />
+              ) : (
+                <div className="table-responsive">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th> Cliente </th>
+                        <th> # Pedido </th>
+                        <th> Total </th>
+                        <th> Data do Pedido </th>
+                        <th> Última Atualização </th>
+                        <th> Status </th>
+                        <th> Ações </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.state.deliveries.map((delivery) => (
+                        <DeliveryItem data={delivery} key={delivery.id} />
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -24,6 +24,7 @@ router.post('/login', (req, res) => {
 
   res.status(200).json({
     session_token: 'IAMAVALIDSESSIONTOKEN',
+    user_id: user.id,
     permissions,
   });
 });

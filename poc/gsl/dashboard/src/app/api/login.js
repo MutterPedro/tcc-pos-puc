@@ -1,4 +1,4 @@
-const url = process.env.AUTH_SERVICE_URL || 'http://localhost:3001';
+const url = process.env.REACT_APP_AUTH_SERVICE_URL || 'http://localhost:3001';
 
 export async function login(username, password) {
   try {

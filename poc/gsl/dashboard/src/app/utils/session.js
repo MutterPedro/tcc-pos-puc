@@ -4,6 +4,12 @@ export function getSessionToken() {
   return token;
 }
 
+export function getUserId() {
+  const token = window.localStorage.getItem('user_id');
+
+  return token;
+}
+
 export function logOut() {
   window.localStorage.removeItem('session_token');
   window.localStorage.removeItem('permissions');

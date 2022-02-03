@@ -18,6 +18,7 @@ export class Login extends Component {
     login(username, password)
       .then((res) => {
         window.localStorage.setItem('session_token', res.session_token);
+        window.localStorage.setItem('user_id', res.user_id);
         window.localStorage.setItem(
           'permissions',
           JSON.stringify(res.permissions),
